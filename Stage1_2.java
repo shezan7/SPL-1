@@ -16,12 +16,12 @@ import javafx.util.Duration;
 
 public class Stage1_2 extends Application {
 	
-	double[][] board=new double[9][3];
+	double[][] board = new double[9][3];
 	Ellipse[] guti = new Ellipse[6];
 	Pane pane = new Pane();
 	public int firstClick;
 	public int secondClick;
-	public boolean first=true,second=false;
+	public boolean first=true, second=false;
 	public int[][] path=new int[9][8];
 	
 	
@@ -59,6 +59,7 @@ public class Stage1_2 extends Application {
 		int x=100, i=0;
 		int index=0;
 		int y=100;
+		
 		for(int j=0; j<3; j++)
 		{
 			
@@ -77,6 +78,7 @@ public class Stage1_2 extends Application {
 				
 				board[index][0]=x;
 				board[index][1]=y;
+				
 				if(index<=2) board[index][2]=1;
 				if(index>=6) board[index][2]=2;
 				
@@ -284,20 +286,21 @@ public class Stage1_2 extends Application {
 					{
 		       	 		
 						firstClick=c;
-						System.out.println(firstClick+""+secondClick);
+					//	System.out.println(firstClick+""+secondClick);
 						first=false;
 						second=true;
 						
 						break A;
 					}
 					
-					for(int l=0;l<8;l++) {
-						if(path[firstClick][l]!=-1&&circle[path[firstClick][l]].contains(e.getX(), e.getY())&&!first&&second) {
-						
-						
+					for(int l=0;l<8;l++)
+					{
+						if(path[firstClick][l]!=-1 && circle[path[firstClick][l]].contains(e.getX(), e.getY())&&!first&&second)
+						{
+								
 							guti[firstClick].setCenterX(board[path[firstClick][l]][0]);
 							guti[firstClick].setCenterY(board[path[firstClick][l]][1]);
-							System.out.println(path[firstClick][l]+""+c);
+						//	System.out.println(path[firstClick][l]+""+c);
 							first=true;
 							second=false;
 							break A;
@@ -338,12 +341,15 @@ public class Stage1_2 extends Application {
 		primaryStage.setMinWidth(900);
 	}
 	
-	public void drawGuti() {
+	public void drawGuti()
+	{
 		
 		int count=0;
-		for(int k=0;k<9;k++) {
+		for(int k=0;k<9;k++)
+		{
 			
-			if(board[k][2]!=0) {
+			if(board[k][2]!=0)
+			{
 				
 				guti[count]=new Ellipse(); 
 				guti[count].setCenterX(board[k][0]);
@@ -351,11 +357,13 @@ public class Stage1_2 extends Application {
 				guti[count].setRadiusX(30);
 				guti[count].setRadiusY(30);
 				
-				if(board[k][2]==1) {
+				if(board[k][2]==1)
+				{
 					guti[count].setFill(Color.GREEN);
 				
 				}
-				else guti[count].setFill(Color.BLUE);
+				else 
+					guti[count].setFill(Color.BLUE);
 				
 				pane.getChildren().addAll(guti[count]);
 				count++;
@@ -367,7 +375,8 @@ public class Stage1_2 extends Application {
 		}
 	}
 	
-	public void makeGraph() {
+	public void makeGraph()
+	{
 		
 		path[0][0]=-1;
 		path[0][1]=-1;
@@ -456,7 +465,8 @@ public class Stage1_2 extends Application {
 		path[8][7]=-1;
 		
 		
-		for(int i=0;i<9;i++) {
+	/*	for(int i=0;i<9;i++)
+		{
 			
 			System.out.print(i+"-->");
 			for(int j=0;j<8;j++) {
@@ -464,7 +474,7 @@ public class Stage1_2 extends Application {
 				if(path[i][j]!=-1) System.out.print(path[i][j]+",");
 			}
 			System.out.println();
-		}
+		} */
 		
 		/*path[9][0]=-1;
 		path[9][1]=-1;
@@ -476,122 +486,6 @@ public class Stage1_2 extends Application {
 		path[9][7]=-1;
 		
 		
-		
-		path[0][0]=-1;
-		path[0][1]=-1;
-		path[0][2]=-1;
-		path[0][3]=-1;
-		path[0][4]=-1;
-		path[0][5]=-1;
-		path[0][6]=-1;
-		path[0][7]=-1;
-		
-		
-		path[0][0]=-1;
-		path[0][1]=-1;
-		path[0][2]=-1;
-		path[0][3]=-1;
-		path[0][4]=-1;
-		path[0][5]=-1;
-		path[0][6]=-1;
-		path[0][7]=-1;
-		
-		path[0][0]=-1;
-		path[0][1]=-1;
-		path[0][2]=-1;
-		path[0][3]=-1;
-		path[0][4]=-1;
-		path[0][5]=-1;
-		path[0][6]=-1;
-		path[0][7]=-1;
-		
-		
-		path[0][0]=-1;
-		path[0][1]=-1;
-		path[0][2]=-1;
-		path[0][3]=-1;
-		path[0][4]=-1;
-		path[0][5]=-1;
-		path[0][6]=-1;
-		path[0][7]=-1;
-		
-		path[0][0]=-1;
-		path[0][1]=-1;
-		path[0][2]=-1;
-		path[0][3]=-1;
-		path[0][4]=-1;
-		path[0][5]=-1;
-		path[0][6]=-1;
-		path[0][7]=-1;
-		
-		
-		
-		path[0][0]=-1;
-		path[0][1]=-1;
-		path[0][2]=-1;
-		path[0][3]=-1;
-		path[0][4]=-1;
-		path[0][5]=-1;
-		path[0][6]=-1;
-		path[0][7]=-1;
-		
-		
-		path[0][0]=-1;
-		path[0][1]=-1;
-		path[0][2]=-1;
-		path[0][3]=-1;
-		path[0][4]=-1;
-		path[0][5]=-1;
-		path[0][6]=-1;
-		path[0][7]=-1;
-		
-		path[0][0]=-1;
-		path[0][1]=-1;
-		path[0][2]=-1;
-		path[0][3]=-1;
-		path[0][4]=-1;
-		path[0][5]=-1;
-		path[0][6]=-1;
-		path[0][7]=-1;
-		
-		
-		path[0][0]=-1;
-		path[0][1]=-1;
-		path[0][2]=-1;
-		path[0][3]=-1;
-		path[0][4]=-1;
-		path[0][5]=-1;
-		path[0][6]=-1;
-		path[0][7]=-1;
-		
-		path[0][0]=-1;
-		path[0][1]=-1;
-		path[0][2]=-1;
-		path[0][3]=-1;
-		path[0][4]=-1;
-		path[0][5]=-1;
-		path[0][6]=-1;
-		path[0][7]=-1;
-		
-		
-		path[0][0]=-1;
-		path[0][1]=-1;
-		path[0][2]=-1;
-		path[0][3]=-1;
-		path[0][4]=-1;
-		path[0][5]=-1;
-		path[0][6]=-1;
-		path[0][7]=-1;
-		
-		
-		path[0][0]=-1;
-		path[0][1]=-1;
-		path[0][2]=-1;
-		path[0][3]=-1;
-		path[0][4]=-1;
-		path[0][5]=-1;
-		path[0][6]=-1;
-		path[0][7]=-1;
 		
 		path[0][0]=-1;
 		path[0][1]=-1;
