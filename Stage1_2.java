@@ -1,4 +1,4 @@
-package teenGutiProject;
+package packageOfTeenGuti;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.PathTransition;
@@ -17,19 +17,22 @@ import javafx.util.Duration;
 public class Stage1_2 extends Application {
 	
 	double[][] board = new double[9][3];
+	
 	Ellipse[] guti = new Ellipse[6];
+	
 	Pane pane = new Pane();
-	public int firstClick;
+	
+	public int selectedGuti, selectedPosition;
 	public int secondClick;
 	public boolean first=true, second=false;
-	public int[][] path=new int[9][8];
+	public int[][] path = new int[9][8];
+	public boolean play=true;
+	public int initial=2;
 	
 	
 	public static void main(String[] args)
 	{
-		
-		
-		
+				
 		launch(args);
 		
 	}
@@ -48,6 +51,7 @@ public class Stage1_2 extends Application {
 		
 		
 		Circle[] circle = new Circle[9];
+		
 		Line[][] line = new Line[8][2];
 		
 	/*	circle.setCenterX(50);
@@ -56,50 +60,42 @@ public class Stage1_2 extends Application {
 		circle.setFill(Color.RED);
 		*/
 		
-		int x=100, i=0;
+		int x=100;
 		int index=0;
 		int y=100;
 		
 		for(int j=0; j<3; j++)
-		{
-			
+		{			
 			board[index][0]=x;
 			board[index][1]=y;
 			x=100;
+			
 			for(int k=0; k<3; k++)
 			{		
-				circle[i] = new Circle();
-				circle[i].setCenterX(x);
-				circle[i].setCenterY(y);
-				circle[i].setRadius(30);
-				circle[i].setFill(Color.RED);
+				circle[index] = new Circle();
+				circle[index].setCenterX(x);
+				circle[index].setCenterY(y);
+				circle[index].setRadius(30);
+				circle[index].setFill(Color.TRANSPARENT);
 				
-				pane.getChildren().addAll(circle[i]);
+				pane.getChildren().addAll(circle[index]);
 				
 				board[index][0]=x;
 				board[index][1]=y;
-				
 				if(index<=2) board[index][2]=1;
 				if(index>=6) board[index][2]=2;
 				
 				x = x + 350;
-				
-				i++;
-				
-				
+								
 				index++;
 				
 			}
-			
-			
-			
+						
 			y = y + 250;
 			
 		}
 		
-	
-		
-		
+			
 		
 		line[0][0] = new Line();
 		line[0][0].setStartX(100);
@@ -274,42 +270,62 @@ public class Stage1_2 extends Application {
 		
 		
 		
-		
-
 		primaryStage.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
-
-			A:for(int c=0; c<9; c++)
-			{
+			
+			if(play) {
 				
-					
-					if(c<6&&guti[c].contains(e.getX(), e.getY())&&first&&!second)
-					{
-		       	 		
-						firstClick=c;
-					//	System.out.println(firstClick+""+secondClick);
-						first=false;
-						second=true;
-						
-						break A;
-					}
-					
-					for(int l=0;l<8;l++)
-					{
-						if(path[firstClick][l]!=-1 && circle[path[firstClick][l]].contains(e.getX(), e.getY())&&!first&&second)
+				A:for(int c=0; c<9; c++)
+				{
+						if(c<6&&guti[c].contains(e.getX(), e.getY())&&first)
 						{
+			       	 		
+							
+							for(int i=0;i<9;i++)
+							{
+								if(circle[i].contains(e.getX(), e.getY())&&first)
+								{
+									
+									selectedPosition=i;
+									selectedGuti=c;
+									first=false;
+									second=true;
+									break A;
+									
+								}
 								
-							guti[firstClick].setCenterX(board[path[firstClick][l]][0]);
-							guti[firstClick].setCenterY(board[path[firstClick][l]][1]);
-						//	System.out.println(path[firstClick][l]+""+c);
-							first=true;
-							second=false;
-							break A;
-						
+								
+							}
+							
+							
 						}
-					}
+						
+						for(int l=0;l<8;l++)
+						{
+							if(path[selectedPosition][l]!=-1&&circle[path[selectedPosition][l]].contains(e.getX(), e.getY())&&second&&board[path[selectedPosition][l]][2]==0)
+							{
+							
+								guti[selectedGuti].getFill();
+								guti[selectedGuti].setCenterX(board[path[selectedPosition][l]][0]);
+								guti[selectedGuti].setCenterY(board[path[selectedPosition][l]][1]);
+								board[path[selectedPosition][l]][2]=board[selectedPosition][2];
+								board[selectedPosition][2]=0;
+								
+								first=true;
+								second=false;
+								winCheck();
+								break A;
+							
+							}
+						}
+					
+					
+				}
+			
 				
 				
-			}	
+			}
+
+			
         });
        
 	
@@ -320,31 +336,95 @@ public class Stage1_2 extends Application {
         	
         	   
         	  
-			   
-			  
         	   
-        	
+        	   
+        	   
         	   
 		   }
           }.start();
 			
-		
-		
+				
 		//pane.getChildren().addAll(line[0][0], line[0][1], line[1][0], line[1][1], line[2][0], line[2][1], line[3][0], line[3][1], line[4][0], line[4][1], line[5][0], line[5][1], line[6][0], line[6][1], line[7][0], line[7][1], guti[0], guti[1], guti[2], guti[3], guti[4], guti[5]);
           pane.getChildren().addAll(line[0][0], line[0][1], line[1][0], line[1][1], line[2][0], line[2][1], line[3][0], line[3][1], line[4][0], line[4][1], line[5][0], line[5][1], line[6][0], line[6][1], line[7][0], line[7][1]);
 		
-         drawGuti();
+        
+        drawGuti();
+        
+        
 		Scene scene = new Scene(pane);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		primaryStage.setMinHeight(700);
 		primaryStage.setMinWidth(900);
+		
+	}
+	
+	public void winCheck()
+	{
+		
+		 A:for(int i=0;i<9;i++)
+		 {
+    		  
+			  for(int j=0;j<8;j++)
+			  {
+    			  
+				  if(board[i][2]!=0&&path[i][j]!=-1&&path[path[i][j]][j]!=-1)
+				  {
+					  
+					  double currentGuti=board[i][2];
+					  double next1=board[path[i][j]][2];
+					  double next2=board[path[path[i][j]][j]][2];
+					  
+    				  if(currentGuti==next1&&currentGuti==next2&&currentGuti==1)
+    				  {
+    					  
+    					  initial--;
+    					  
+    					  if(initial<=0)
+    					  {
+    						  System.out.println("GREEN guti win");
+    						  initial=0;
+    						  play=false;
+    					  }
+    					  
+    					  break A;
+    					  
+    				  }
+    				  else if(currentGuti==next1&&currentGuti==next2&&currentGuti==2)
+    				  {
+    					 
+    					  initial--;
+    					  
+    					  if(initial<=0)
+    					  {
+    						  System.out.println("BLUE guti win");
+    						  initial=0;
+    						  play=false;
+    						  
+    					  }
+    					  
+    					  break A;
+    					  
+    				  }
+     			 
+    			  
+    		  }
+		  }
+		  
+		  
+	  }
+	   
+		   
+	   
+	 
+	  
 	}
 	
 	public void drawGuti()
 	{
 		
 		int count=0;
+		
 		for(int k=0;k<9;k++)
 		{
 			
@@ -357,26 +437,26 @@ public class Stage1_2 extends Application {
 				guti[count].setRadiusX(30);
 				guti[count].setRadiusY(30);
 				
+				
 				if(board[k][2]==1)
 				{
 					guti[count].setFill(Color.GREEN);
 				
 				}
-				else 
+				else
 					guti[count].setFill(Color.BLUE);
 				
 				pane.getChildren().addAll(guti[count]);
+				
 				count++;
-				
-				
+								
 			}
 			
 			
 		}
 	}
 	
-	public void makeGraph()
-	{
+	public void makeGraph() {
 		
 		path[0][0]=-1;
 		path[0][1]=-1;
@@ -465,8 +545,7 @@ public class Stage1_2 extends Application {
 		path[8][7]=-1;
 		
 		
-	/*	for(int i=0;i<9;i++)
-		{
+		/*for(int i=0;i<9;i++) {
 			
 			System.out.print(i+"-->");
 			for(int j=0;j<8;j++) {
@@ -474,46 +553,9 @@ public class Stage1_2 extends Application {
 				if(path[i][j]!=-1) System.out.print(path[i][j]+",");
 			}
 			System.out.println();
-		} */
-		
-		/*path[9][0]=-1;
-		path[9][1]=-1;
-		path[9][2]=-1;
-		path[9][3]=-1;
-		path[9][4]=-1;
-		path[9][5]=-1;
-		path[9][6]=-1;
-		path[9][7]=-1;
+		}*/
 		
 		
-		
-		path[0][0]=-1;
-		path[0][1]=-1;
-		path[0][2]=-1;
-		path[0][3]=-1;
-		path[0][4]=-1;
-		path[0][5]=-1;
-		path[0][6]=-1;
-		path[0][7]=-1;
-		
-		
-		path[0][0]=-1;
-		path[0][1]=-1;
-		path[0][2]=-1;
-		path[0][3]=-1;
-		path[0][4]=-1;
-		path[0][5]=-1;
-		path[0][6]=-1;
-		path[0][7]=-1;
-		
-		path[0][0]=-1;
-		path[0][1]=-1;
-		path[0][2]=-1;
-		path[0][3]=-1;
-		path[0][4]=-1;
-		path[0][5]=-1;
-		path[0][6]=-1;
-		path[0][7]=-1;*/
 		
 	}
 
