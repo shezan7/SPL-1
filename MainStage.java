@@ -6,15 +6,27 @@ import javafx.stage.Stage;
 
 public class MainStage extends Application {
 	
+private static Stage stage;
+	
+public static Stage getStage()
+{
+        return stage;
+}
+	
 public void start(Stage primaryStage) throws Exception {
+	
+		this.stage = primaryStage;
        
-        Stage1_2 pane = new Stage1_2();
+        Stage1 pane = new Stage1();
+   //     pane.setMinSize(900, 650);
         
-        Scene scene = new Scene(pane); 
+        Scene scene = new Scene(pane);
         
         primaryStage.setTitle("Menu");
         primaryStage.setScene(scene);
-        primaryStage.show();   
+        primaryStage.show();
+        primaryStage.setHeight(700);
+        primaryStage.setWidth(900);
        
     }
 	
