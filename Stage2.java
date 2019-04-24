@@ -33,8 +33,7 @@ public class Stage2 extends VBox {
 	}
 	
 	public void gameWithFriend()
-	{
-		
+	{		
 		Stage3_1 pane = new Stage3_1();
 		
 		Scene scene = new Scene(pane);
