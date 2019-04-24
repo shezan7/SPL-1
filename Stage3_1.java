@@ -4,6 +4,7 @@ import javafx.animation.AnimationTimer;
 import javafx.animation.PathTransition;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -11,6 +12,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
 //import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -21,14 +23,14 @@ public class Stage3_1 extends Pane {
 	Ellipse[] guti = new Ellipse[6];
 	
 	
-	public int selectedGuti, selectedPosition;
+	public int selectedGuti, selectedPosition, previousPosiotion;
+	public int selectedGuti2, selectedPosition2, previousPosiotion2;
 	public int secondClick;
-	public boolean first=true, second=false;
+	public boolean firstTeamClick1=true, firstTeamClick2=false, 
+			secondTeamClick1=false, secondTeamClick2=false, second=false;
 	public int[][] path = new int[9][8];
 	public boolean play=true;
 	public int initial=2;
-	
-	
 	
 	
 	double ballX;
@@ -38,11 +40,9 @@ public class Stage3_1 extends Pane {
 		// TODO Auto-generated method stub
 		
 		
-		
 		makeGraph();
 		
-		
-		
+				
 		Circle[] circle = new Circle[9];
 		
 		Line[][] line = new Line[8][2];
@@ -69,6 +69,7 @@ public class Stage3_1 extends Pane {
 				circle[index].setCenterX(x);
 				circle[index].setCenterY(y);
 				circle[index].setRadius(30);
+				//circle[index].setStrokeWidth(10);
 				circle[index].setFill(Color.TRANSPARENT);
 				
 				getChildren().addAll(circle[index]);
@@ -79,7 +80,7 @@ public class Stage3_1 extends Pane {
 				if(index>=6) board[index][2]=2;
 				
 				x = x + 350;
-								
+					
 				index++;
 				
 			}
@@ -87,8 +88,7 @@ public class Stage3_1 extends Pane {
 			y = y + 250;
 			
 		}
-		
-			
+					
 		
 		line[0][0] = new Line();
 		line[0][0].setStartX(100);
@@ -267,49 +267,142 @@ public class Stage3_1 extends Pane {
 			
 			if(play) {
 				
-				A:for(int c=0;c<9;c++)
+				
+				for(int c=0;c<9;c++)
 				{
-						if(c<6&&guti[c].contains(e.getX(), e.getY())&&first)
-						{
+						
+					if(c<=2&&guti[c].contains(e.getX(), e.getY())&&firstTeamClick1)
+					{
+													
+							if(firstTeamClick2)
+							{								
+								guti[selectedGuti].setStroke(Color.BLACK);
+							}
 							
 							for(int i=0;i<9;i++)
-							{
-								if(circle[i].contains(e.getX(), e.getY())&&first)
+							{								
+								if(guti[c].getCenterX()==circle[i].getCenterX()
+										&&guti[c].getCenterY()==circle[i].getCenterY())
 								{									
-									selectedPosition=i;
-									selectedGuti=c;
-									first=false;
-									second=true;
-									
-									break A;
-									
+									previousPosiotion=i;
+									break;
 								}
-								
 							}
 							
+							selectedGuti=c;
+							guti[c].setStroke(Color.RED);
+							firstTeamClick2=true;
+							
+							System.out.println("1: selectedGuti "+selectedGuti+
+									" previousPosiotion "+previousPosiotion);
+							
+							break;
 						}
 						
-						for(int l=0;l<8;l++)
-						{	
-							if(path[selectedPosition][l]!=-1&&circle[path[selectedPosition][l]].contains(e.getX(), e.getY())&&second&&board[path[selectedPosition][l]][2]==0)
-							{							
-								guti[selectedGuti].getFill();
-								guti[selectedGuti].setCenterX(board[path[selectedPosition][l]][0]);
-								guti[selectedGuti].setCenterY(board[path[selectedPosition][l]][1]);
-								board[path[selectedPosition][l]][2]=board[selectedPosition][2];
-								board[selectedPosition][2]=0;
+						if(circle[c].contains(e.getX(), e.getY())&&firstTeamClick2)
+						{							
+							selectedPosition=c;
+							//second=true;
+							
+							System.out.println("1st player selectedPosition "+selectedPosition);
+							
+							for(int i=0;i<8;i++)
+							{
+								if(path[previousPosiotion][i]>=0
+										&&path[previousPosiotion][i]==selectedPosition
+										&&board[path[previousPosiotion][i]][2]==0)
+								{									
+									guti[selectedGuti].getFill();
+									guti[selectedGuti].setCenterX(board[path[previousPosiotion][i]][0]);
+									guti[selectedGuti].setCenterY(board[path[previousPosiotion][i]][1]);
+									board[selectedPosition][2]=1;
+									board[previousPosiotion][2]=0;
+									guti[selectedGuti].setStroke(Color.BLACK);
+									
+									firstTeamClick2=false;
+									firstTeamClick1=false;
+									
+									secondTeamClick1=true;
+									
+									winCheckGreenGuti();
+									
+									break;
+								}
+							}							
+							
+							break;
+						}
+						
+												
+						if(c<6 &&c>=3&&guti[c].contains(e.getX(), e.getY())&&secondTeamClick1)
+						{								
+							
+								if(secondTeamClick2) 
+								{									
+									guti[selectedGuti2].setStroke(Color.BLACK);
+								}
 								
-								first=true;
-								second=false;
+								for(int i=0;i<9;i++)
+								{									
+									if(guti[c].getCenterX()==circle[i].getCenterX()
+											&&guti[c].getCenterY()==circle[i].getCenterY())
+									{										
+										previousPosiotion2=i;
+										break;
+									}
+								}
 								
-								winCheck();
+								selectedGuti2=c;
+								guti[c].setStroke(Color.RED);
+								secondTeamClick2=true;
 								
-								break A;
+								System.out.println("2: selectedGuti2 "+selectedGuti2+
+										" previousPosiotion2 "+previousPosiotion2);
+								
+								break;
+							}
+							
+							if(circle[c].contains(e.getX(), e.getY())&&secondTeamClick2)
+							{								
+								selectedPosition2=c;
+								//second=true;
+								
+								System.out.println("2nd player selectedPosition2 "+selectedPosition2);
+								
+								for(int i=0;i<8;i++)
+								{
+									if(path[previousPosiotion2][i]>=0
+											&&path[previousPosiotion2][i]==selectedPosition2
+											&&board[path[previousPosiotion2][i]][2]==0)
+									{										
+										guti[selectedGuti2].getFill();
+										guti[selectedGuti2].setCenterX(board[path[previousPosiotion2][i]][0]);
+										guti[selectedGuti2].setCenterY(board[path[previousPosiotion2][i]][1]);
+										board[selectedPosition2][2]=2;
+										board[previousPosiotion2][2]=0;
+										guti[selectedGuti2].setStroke(Color.BLACK);
+																				
+										secondTeamClick1=false;
+										secondTeamClick2=false;
+										firstTeamClick1=true;
+										
+										winCheckBlueGuti();
+										
+										break;
+									}
+								}
+								
+								break;																
 							
 							}
-						}
-										
-				}
+																
+					}
+				
+//				for(int i=0;i<9;i++)
+//				{
+//					
+//					System.out.println(i + " " + board[i][2]);
+//				}
 											
 			}
 			
@@ -331,103 +424,206 @@ public class Stage3_1 extends Pane {
           }.start();
 			
 				
-		//pane.getChildren().addAll(line[0][0], line[0][1], line[1][0], line[1][1], line[2][0], line[2][1], line[3][0], line[3][1], line[4][0], line[4][1], line[5][0], line[5][1], line[6][0], line[6][1], line[7][0], line[7][1], guti[0], guti[1], guti[2], guti[3], guti[4], guti[5]);
-          getChildren().addAll(line[0][0], line[0][1], line[1][0], line[1][1], line[2][0], line[2][1], line[3][0], line[3][1], line[4][0], line[4][1], line[5][0], line[5][1], line[6][0], line[6][1], line[7][0], line[7][1]);
+		getChildren().addAll(line[0][0], line[0][1], line[1][0], line[1][1], line[2][0], line[2][1], line[3][0], line[3][1], line[4][0], line[4][1], line[5][0], line[5][1], line[6][0], line[6][1], line[7][0], line[7][1]);
 		
         
         drawGuti();
-        
-//		Scene scene = new Scene(pane);
-//		primaryStage.setScene(scene);
-//		primaryStage.show();
-//		primaryStage.setMinHeight(700);
-//		primaryStage.setMinWidth(900);
-		
+        		
 	}
 	
-	public void winCheck()
+	
+	
+	
+
+	public void winCheckGreenGuti()
 	{
 		
-		 A:for(int i=0;i<9;i++)
-		 {
-    		  
-			  for(int j=0;j<8;j++)
-			  {
-    			  
-				  if(board[i][2]!=0&&path[i][j]!=-1&&path[path[i][j]][j]!=-1)
-				  {
-					  
-					  double currentGuti=board[i][2];
-					  double next1=board[path[i][j]][2];
-					  double next2=board[path[path[i][j]][j]][2];
-					  
-    				  if(currentGuti==next1&&currentGuti==next2&&currentGuti==1)
-    				  {
-    					  
-    					  initial--;
-    					  
-    					  if(initial<=0)
-    					  {
-    						  System.out.println("GREEN guti win");
-    						  initial=0;
-    						  play=false;
-    					  }
-    					  
-    					  break A;
-    					  
-    				  }
-    				  else if(currentGuti==next1&&currentGuti==next2&&currentGuti==2)
-    				  {
-    					 
-    					  initial--;
-    					  
-    					  if(initial<=0)
-    					  {
-    						  System.out.println("BLUE guti win");
-    						  initial=0;
-    						  play=false;
-    						  
-    					  }
-    					  
-    					  break A;
-    					  
-    				  }
-     			 
-    			  
-    		  }
-		  }
-		  
-		  
-	  }
-	   
-		   
-	   
-	 
-	  
+		int flag=0;
+		
+		if(board[6][2]==1 && board[7][2]==1 && board[8][2]==1)
+		{			
+			flag=1;
+		}
+		
+		else if(board[3][2]==1 && board[4][2]==1 && board[5][2]==1)
+		{			
+			flag=1;
+		}
+		
+		else if(board[0][2]==1 && board[3][2]==1 && board[6][2]==1)
+		{			
+			flag=1;
+		}
+		
+		else if(board[1][2]==1 && board[4][2]==1 && board[7][2]==1)
+		{			
+			flag=1;
+		}
+		
+		else if(board[2][2]==1 && board[5][2]==1 && board[8][2]==1)
+		{			
+			flag=1;
+		}
+		
+		else if(board[0][2]==1 && board[4][2]==1 && board[8][2]==1)
+		{			
+			flag=1;
+		}
+		
+		else if(board[2][2]==1 && board[4][2]==1 && board[6][2]==1)
+		{			
+			flag=1;
+		}
+		
+		else flag=0;
+		
+		
+		if(flag==1)
+		{			
+			System.out.println("Green Win!!");
+			play=false;
+		}
+		
+		else ;
+		
 	}
+
+	
+	
+	
+	public void winCheckBlueGuti()
+	{
+		
+		int flag=0;
+		
+		if(board[0][2]==2 && board[1][2]==2 && board[2][2]==2)
+		{			
+			flag=1;
+		}
+		
+		else if(board[3][2]==2 && board[4][2]==2 && board[5][2]==2)
+		{			
+			flag=1;
+		}
+		
+		else if(board[0][2]==2 && board[3][2]==2 && board[6][2]==2)
+		{			
+			flag=1;
+		}
+		
+		else if(board[1][2]==2 && board[4][2]==2 && board[7][2]==2)
+		{			
+			flag=1;
+		}		
+		
+		else if(board[2][2]==2 && board[5][2]==2 && board[8][2]==2)
+		{			
+			flag=1;
+		}
+		
+		else if(board[0][2]==2 && board[4][2]==2 && board[8][2]==2)
+		{			
+			flag=1;
+		}
+		
+		else if(board[2][2]==2 && board[4][2]==2 && board[6][2]==2)
+		{			
+			flag=1;
+		}
+		
+		else flag=0;
+		
+		
+		if(flag==1)
+		{			
+			System.out.println("Blue Win!!");
+			play=false;
+		}
+		
+		else ;
+		
+	}
+		
+	
+//	public void winCheck()
+//	{
+//	
+//		
+//		
+//		
+//		 A:for(int i=0;i<9;i++)
+//		 {
+//    		  
+//			  for(int j=0;j<8;j++)
+//			  {
+//    			  
+//				  if(board[i][2]!=0&&path[i][j]!=-1&&path[path[i][j]][j]!=-1)
+//				  {
+//					  
+//					  double currentGuti=board[i][2];
+//					  double next1=board[path[i][j]][2];
+//					  double next2=board[path[path[i][j]][j]][2];
+//					  
+//    				  if(currentGuti==next1&&currentGuti==next2&&currentGuti==1)
+//    				  {
+//    					  
+//    					  initial--;
+//    					  
+//    					  if(initial<=0)
+//    					  {
+//    						  System.out.println("GREEN guti win");
+//    						  initial=0;
+//    						  play=false;
+//    					  }
+//    					  
+//    					  break A;
+//    					  
+//    				  }
+//    				  else if(currentGuti==next1&&currentGuti==next2&&currentGuti==2)
+//    				  {
+//    					 
+//    					  initial--;
+//    					  
+//    					  if(initial<=0)
+//    					  {
+//    						  System.out.println("BLUE guti win");
+//    						  initial=0;
+//    						  play=false;
+//    						  
+//    					  }
+//    					  
+//    					  break A;
+//    					  
+//    				  }
+//     			 
+//    			  
+//    		  }
+//		  }
+//		  
+//		  
+//	  }
+//	   
+//	}
 	
 	public void drawGuti()
-	{
-		
+	{		
 		int count=0;
 		
 		for(int k=0;k<9;k++)
-		{
-			
+		{			
 			if(board[k][2]!=0)
-			{
-				
+			{					
 				guti[count]=new Ellipse(); 
 				guti[count].setCenterX(board[k][0]);
 				guti[count].setCenterY(board[k][1]);
 				guti[count].setRadiusX(30);
 				guti[count].setRadiusY(30);
-				
+				guti[count].setStrokeWidth(3);
+				guti[count].setStroke(Color.BLACK);				
 				
 				if(board[k][2]==1)
 				{
-					guti[count].setFill(Color.GREEN);
-				
+					guti[count].setFill(Color.GREEN);				
 				}
 				else
 					guti[count].setFill(Color.BLUE);
@@ -437,13 +633,12 @@ public class Stage3_1 extends Pane {
 				count++;
 								
 			}
-			
-			
+						
 		}
 	}
 	
-	public void makeGraph() {
-		
+	public void makeGraph()
+	{		
 		path[0][0]=-1;
 		path[0][1]=-1;
 		path[0][2]=-1;
@@ -510,6 +705,7 @@ public class Stage3_1 extends Pane {
 		path[6][5]=-1;
 		path[6][6]=-1;
 		path[6][7]=-1;
+		
 		
 		path[7][0]=6;
 		path[7][1]=-1;
