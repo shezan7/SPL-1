@@ -14,8 +14,7 @@ import javafx.stage.Stage;
 
 public class Stage1 extends VBox{
 
-		public Stage1()
-		
+		public Stage1()		
 		{
 			setAlignment(Pos.CENTER);
 			
@@ -44,8 +43,7 @@ public class Stage1 extends VBox{
 		}
 		
 		public void twoPlayer()
-		{
-			
+		{			
 			Stage2 pane = new Stage2();
 			
 			Scene scene = new Scene(pane);
