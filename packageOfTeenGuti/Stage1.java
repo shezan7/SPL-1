@@ -29,6 +29,8 @@ public class Stage1 extends VBox{
 			btn2.setText("Exit");
 			btn2.setFont(Font.font(40));
 			
+			btn2.setOnAction(e->stop());
+			
 			getChildren().addAll(btn, btn2);
 			
 		}
@@ -41,6 +43,11 @@ public class Stage1 extends VBox{
 			
 			MainStage.getStage().setScene(scene);			
 	        MainStage.getStage().setTitle("two");
+		}
+		
+		public void stop()
+		{
+			MainStage.getStage().close();
 		}
 
 }

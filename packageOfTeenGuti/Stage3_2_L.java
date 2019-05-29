@@ -35,7 +35,7 @@ public class Stage3_2_L extends VBox {
 		
 	public void back()
 	{	
-		Stage2 pane = new Stage2();
+		Stage1 pane = new Stage1();
 			
 		Scene scene = new Scene(pane);
 			
